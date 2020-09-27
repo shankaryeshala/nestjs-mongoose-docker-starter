@@ -10,6 +10,7 @@ export class NewsController {
 
     @Get()
     public getNews() {
-        return this.newsService.getNews();
+        console.log('Before calling service inside controller');
+        return this.newsService.findAll();
     }
 }

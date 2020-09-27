@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+  news-app:
+    image: node:14-slim
+    container_name: news-app
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    user: "node"
+    working_dir: /usr/src/app
+    environment:
+      - DB_URL=mongodb://mongo-db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+    command: "npm start"
+
+  mongodb:
+    image: mongo
+    container_name: mongo-db
+    restart: always
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - backend
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodata: 
+  
+networks:
+    backend:
